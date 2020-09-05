@@ -1,0 +1,9 @@
+html
+  head
+    title Rarby
+  body
+      ul
+        for item in torrents
+         li
+         - url = item.magnetLink
+          a(href=url) #{item.title}
