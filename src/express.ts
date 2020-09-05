@@ -1,13 +1,35 @@
-import express, {Application, Request, Response, NextFunction} from 'express';
+import path from 'path';
+import express, { Application, Request, Response, NextFunction } from 'express';
+import { GetTorrents } from './app';
 
-const app: Application = express();
+class Express {
 
-const port = 3000
+  public express: Application;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  constructor() {
+    this.express = express();
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+    this.express.set('views', path.join(__dirname, '../views'));
+    this.express.set('view engine', 'pug');
+    this.mountRoutes();
+  }
+
+  private mountRoutes(): void {
+    const router = express.Router();
+
+    router.get('/', async (req, res) => {
+      console.log('Loading Torrents');
+
+      const tor = await GetTorrents();
+
+      console.log('Torrents Loaded');
+
+      res.render('index', { torrents: tor })
+    });
+
+    this.express.use('/', router);
+  }
+  // app.use(express.static('src/public'));
+}
+
+export default new Express().express

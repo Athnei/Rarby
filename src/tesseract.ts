@@ -13,6 +13,5 @@ export async function GetCaptcha(location: string = 'images/code.png') {
     // console.log(text);
     await worker.terminate();
 
-    return text
-
+    return text;
 }
