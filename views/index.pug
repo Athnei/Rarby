@@ -7,3 +7,5 @@ html
          li
          - url = item.magnetLink
           a(href=url) #{item.title}
+          - imgUrl = item.imgLink
+            img(src=imgUrl, referrerPolicy="no-referrer")

@@ -1,11 +1,16 @@
 // import { createWorker } from 'tesseract.js';
 import { GetCaptcha } from './tesseract';
 import { Item } from './models/carousel-item';
-const puppeteer = require('puppeteer');
+import * as fs from 'fs';
+import path from 'path';
+
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
 export async function GetTorrents() {
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
 
   try {
     const page = await browser.newPage();
@@ -36,7 +41,8 @@ export async function GetTorrents() {
 
           const i: Item = {
             torrentLink: 'https://rarbgtorrents.org' + x?.getAttribute('href'),
-            title: x?.getAttribute('title') as string
+            title: x?.getAttribute('title') as string,
+            imgLink: x?.firstElementChild?.getAttribute('src')?.replace('over_opt', 'poster_opt')
           };
 
           torrentItems.push(i)
@@ -56,6 +62,8 @@ export async function GetTorrents() {
       iterator.magnetLink = magnet;
     }
 
+    // fs.writeFileSync(path.join(__dirname, '../lastlookups/t.json'), JSON.stringify(torrents, null, 2))
+    debugger
     return torrents;
   } catch (error) {
     console.error(error);
