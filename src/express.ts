@@ -8,8 +8,6 @@ class Express {
   constructor() {
     this.express = express();
 
-    // this.express.set('views', path.join(__dirname, '../views'));
-    // this.express.set('view engine', 'pug');
     this.mountRoutes();
   }
 
@@ -19,22 +17,15 @@ class Express {
     router.get('/', async (req, res) => {
       console.log('Loading Torrents');
 
-      let tor;
-
-      // const json = fs.readFileSync(path.join(__dirname, '../lastlookups/t.json'), 'utf8');
-      // tor = JSON.parse(json);
-
-      tor = await GetTorrents();
+      const tor = await GetTorrents();
 
       console.log('Torrents Loaded');
 
-      // res.render('index', { torrents: tor })
-      res.send("Hello World!");
+      res.json(tor);
     });
 
     this.express.use('/', router);
   }
-  // app.use(express.static('src/public'));
 }
 
 export default new Express().express

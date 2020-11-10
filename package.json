@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "portCheck": "lsof -i tcp:3000"
   },
   "repository": {
     "type": "git",

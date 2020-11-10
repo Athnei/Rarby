@@ -59,7 +59,6 @@ export async function GetTorrents() {
       iterator.magnetLink = magnet;
     }
 
-    debugger
     return torrents;
   } catch (error) {
     console.error(error);
