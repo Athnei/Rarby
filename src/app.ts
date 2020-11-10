@@ -16,7 +16,7 @@ export async function GetTorrents() {
     await page.goto('https://rarbgtorrents.org/torrents.php', { waitUntil: 'networkidle2' });
     await page.setViewport({ width: 1366, height: 357 });
     await page.waitForSelector('table > tbody > tr:nth-child(2) > td:nth-child(2) > img');
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const element = await page.$('body > form > div > div > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child(2) > img');
 
