@@ -1,6 +1,4 @@
-import path from 'path';
-import * as fs from 'fs';
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application } from 'express';
 import { GetTorrents } from './app';
 
 class Express {
@@ -10,8 +8,8 @@ class Express {
   constructor() {
     this.express = express();
 
-    this.express.set('views', path.join(__dirname, '../views'));
-    this.express.set('view engine', 'pug');
+    // this.express.set('views', path.join(__dirname, '../views'));
+    // this.express.set('view engine', 'pug');
     this.mountRoutes();
   }
 
@@ -23,16 +21,15 @@ class Express {
 
       let tor;
 
-      const json = fs.readFileSync(path.join(__dirname, '../lastlookups/t.json'), 'utf8');
-      tor = JSON.parse(json);
+      // const json = fs.readFileSync(path.join(__dirname, '../lastlookups/t.json'), 'utf8');
+      // tor = JSON.parse(json);
 
-      if (tor) {
-        tor = await GetTorrents();
-      }
+      tor = await GetTorrents();
 
       console.log('Torrents Loaded');
 
-      res.render('index', { torrents: tor })
+      // res.render('index', { torrents: tor })
+      res.send("Hello World!");
     });
 
     this.express.use('/', router);

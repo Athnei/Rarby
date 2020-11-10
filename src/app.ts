@@ -1,8 +1,6 @@
 // import { createWorker } from 'tesseract.js';
 import { GetCaptcha } from './tesseract';
 import { Item } from './models/carousel-item';
-import * as fs from 'fs';
-import path from 'path';
 
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -11,10 +9,9 @@ puppeteer.use(StealthPlugin());
 export async function GetTorrents() {
 
   const browser = await puppeteer.launch({ headless: true });
-
   try {
+
     const page = await browser.newPage();
-    // const navigationPromise = page.waitForNavigation();
 
     await page.goto('https://rarbgtorrents.org/torrents.php', { waitUntil: 'networkidle2' });
     await page.setViewport({ width: 1366, height: 357 });
@@ -62,7 +59,6 @@ export async function GetTorrents() {
       iterator.magnetLink = magnet;
     }
 
-    // fs.writeFileSync(path.join(__dirname, '../lastlookups/t.json'), JSON.stringify(torrents, null, 2))
     debugger
     return torrents;
   } catch (error) {
