@@ -1,14 +1,16 @@
 // import { createWorker } from 'tesseract.js';
 import { GetCaptcha } from './tesseract';
 import { Item } from './models/carousel-item';
+import { Torrents } from './models/torrents';
 
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
-export async function GetTorrents() {
+export async function GetTorrents()/*: Promise<Torrents>*/ {
 
   const browser = await puppeteer.launch({ headless: true });
+  
   try {
 
     const page = await browser.newPage();
@@ -28,9 +30,9 @@ export async function GetTorrents() {
 
     await page.waitForSelector('body > table:nth-child(6) > tbody > tr > td:nth-child(2) > div > table > tbody > tr:nth-child(2) > td > div:nth-child(1) > table');
 
-    const torrents: Item[] = await page.evaluate(() => {
+    const torrents: Torrents = await page.evaluate(() => {
 
-      let torrentItems: Item[] = [];
+      const evalTorrents: Item[] = [];
 
       document.querySelectorAll(
         'body > table:nth-child(6) > tbody > tr > td:nth-child(2) > div > table > tbody > tr:nth-child(2) > td > div:nth-child(1) > table > tbody > tr > td > a')
@@ -42,13 +44,16 @@ export async function GetTorrents() {
             imgLink: x?.firstElementChild?.getAttribute('src')?.replace('over_opt', 'poster_opt')
           };
 
-          torrentItems.push(i)
+          evalTorrents.push(i)
         });
 
-      return torrentItems;
+      return {
+        dateOfScraping: new Date(),
+        torrentItems: evalTorrents
+      } as Torrents;
     });
 
-    for (const iterator of torrents) {
+    for (const iterator of torrents.torrentItems) {
 
       await page.goto(iterator.torrentLink, { waitUntil: 'networkidle2' });
 
