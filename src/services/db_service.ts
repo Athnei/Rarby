@@ -10,18 +10,22 @@ export async function run() {
         .write();
 }
 
-export function GetTorrentsFromDb() {
+export async function LoadTorrents(): Promise<Torrents[]> {
 
-    const result = db.get('posts')        
+    const result = await db.get('posts')
         .value();
 
     return result;
 }
 
-export async function SetTorrentsToDb(t: Torrents) {
-    if (!t) return;
+export async function LoadLastTorrent(): Promise<Torrents> {
+    return await db.get('posts').value().pop();
+}
 
-    await db.get('posts')
+export async function SetTorrentsToDb(t: Torrents): Promise<Torrents> {
+    if (!t) return Promise.reject();
+
+    return await db.get('posts')
         .push(t)
         .write();
 }

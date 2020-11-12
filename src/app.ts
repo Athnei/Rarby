@@ -7,10 +7,12 @@ const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
-export async function GetTorrents()/*: Promise<Torrents>*/ {
+
+
+export async function GetTorrents(): Promise<Torrents> {
 
   const browser = await puppeteer.launch({ headless: true });
-  
+
   try {
 
     const page = await browser.newPage();
@@ -47,8 +49,8 @@ export async function GetTorrents()/*: Promise<Torrents>*/ {
           evalTorrents.push(i)
         });
 
+
       return {
-        dateOfScraping: new Date(),
         torrentItems: evalTorrents
       } as Torrents;
     });
@@ -64,9 +66,15 @@ export async function GetTorrents()/*: Promise<Torrents>*/ {
       iterator.magnetLink = magnet;
     }
 
-    return torrents;
+    torrents.dateOfScraping = new Date();
+
+    return new Promise((resolve) => {
+      resolve(torrents);
+    });
+
   } catch (error) {
     console.error(error);
+    return Promise.reject(error);
   } finally {
     await browser.close();
   }

@@ -1,7 +1,8 @@
 import express, { Application } from 'express';
+import moment from 'moment';
 import { GetTorrents } from './app';
 import { Torrents } from './models/torrents';
-import { GetTorrentsFromDb, SetTorrentsToDb } from './services/db_service';
+import { LoadLastTorrent, LoadTorrents, SetTorrentsToDb } from './services/db_service';
 
 class Express {
 
@@ -19,15 +20,17 @@ class Express {
     router.get('/', async (req, res) => {
       console.log('Loading Torrents');
 
-      const tors = await GetTorrents();
+      let lastTorr: Torrents = await LoadLastTorrent();
 
-      // SetTorrentsToDb(tors as Torrents);
+      if (moment(lastTorr.dateOfScraping).isBefore(moment().subtract(1, 'h'))) {
+        const tors: Torrents = await GetTorrents();
 
-      const tor = await GetTorrentsFromDb();
+        lastTorr = await SetTorrentsToDb(tors);
+      }
 
       console.log('Torrents Loaded');
 
-      res.json(tor);
+      res.json(lastTorr);
     });
 
     this.express.use('/', router);
