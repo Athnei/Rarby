@@ -10,7 +10,7 @@ export async function run() {
         .write();
 }
 
-export async function LoadTorrents(): Promise<Torrents[]> {
+export async function LoadAllTorrents(): Promise<Torrents[]> {
 
     const result = await db.get('posts')
         .value();
@@ -19,15 +19,33 @@ export async function LoadTorrents(): Promise<Torrents[]> {
 }
 
 export async function LoadLastTorrent(): Promise<Torrents> {
-    return await db.get('posts').value().pop();
+
+    if (db.has('posts').value()) {
+        return await db.get('posts').orderBy('dateOfScraping', 'desc').first().value();
+    }
+
+    return Promise.reject(null);
 }
 
-export async function SetTorrentsToDb(t: Torrents): Promise<Torrents> {
+export async function SaveTorrents(t: Torrents): Promise<Torrents> {
     if (!t) return Promise.reject();
 
-    return await db.get('posts')
+    if (db.get('posts').size().value() >= 10) {
+        const last: Torrents = await db.get('posts')
+            .orderBy('dateOfScraping', 'desc')
+            .last()
+            .value();
+
+        db.remove({ Id: last.Id })
+            .write()
+    }
+
+    await db.get('posts')
         .push(t)
         .write();
+
+    return t;
+
 }
 
 run();

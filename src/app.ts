@@ -2,6 +2,8 @@
 import { GetCaptcha } from './tesseract';
 import { Item } from './models/carousel-item';
 import { Torrents } from './models/torrents';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -9,7 +11,7 @@ puppeteer.use(StealthPlugin());
 
 
 
-export async function GetTorrents(): Promise<Torrents> {
+export async function ScrapeTorrents(): Promise<Torrents> {
 
   const browser = await puppeteer.launch({ headless: true });
 
@@ -66,6 +68,7 @@ export async function GetTorrents(): Promise<Torrents> {
       iterator.magnetLink = magnet;
     }
 
+    torrents.Id = uuidv4();
     torrents.dateOfScraping = new Date();
 
     return new Promise((resolve) => {
