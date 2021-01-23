@@ -5,11 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Chrome",
+            "name": "Launch via NPM",
             "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}"
+            "runtimeArgs": [
+                "run-script",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "type": "pwa-node"
         }
     ]
 }

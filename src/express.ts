@@ -16,6 +16,7 @@ class Express {
     const router = express.Router();
 
     router.get('/', async (req, res) => {
+      
       console.log("Receiving request")
 
       const torrents: Torrents = await GetTorrents();
@@ -25,6 +26,7 @@ class Express {
       }
 
       console.log("Sending response")
+
       res.json({ date: new Date(), torrents });
     });
 

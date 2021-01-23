@@ -5,6 +5,7 @@ import { Torrents } from '../models/torrents';
 let db: any;
 
 export async function run() {
+
     db = await low(new FileSync('db.json'));
     db.defaults({ posts: [] })
         .write();
@@ -28,6 +29,7 @@ export async function LoadLastTorrent(): Promise<Torrents> {
 }
 
 export async function SaveTorrents(t: Torrents): Promise<Torrents> {
+    
     if (!t) return Promise.reject();
 
     if (db.get('posts').size().value() >= 10) {
